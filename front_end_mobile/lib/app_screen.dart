@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'features/home/home.dart';
+import 'features/order-list/cubit/order_list_cubit.dart';
 
 class AppScreen extends StatefulWidget {
   const AppScreen({super.key});
@@ -14,22 +16,13 @@ class _AppScreenState extends State<AppScreen> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<YourBlocA>(
-          create: (context) => YourBlocA(),
-        ),
-        BlocProvider<YourBlocB>(
-          create: (context) => YourBlocB(),
+       BlocProvider<OrderListCubit>(
+          create: (context) => OrderListCubit(),
         ),
       ],
-      child: MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text('MultiBlocProvider Example'),
-          ),
-          body: const Center(
-            child: Text('Hello, Flutter!'),
-          ),
-        ),
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
       ),
     );
   }
