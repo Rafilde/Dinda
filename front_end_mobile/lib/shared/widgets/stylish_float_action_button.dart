@@ -7,7 +7,7 @@ class StylishFAB extends StatelessWidget {
   final Color color;
   final Color iconColor;
 
-  const StylishFAB({
+  const StylishFAB({super.key, 
     required this.onPressed,
     required this.icon,
     this.color = AppColors.primaryColor,

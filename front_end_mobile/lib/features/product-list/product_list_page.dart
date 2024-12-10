@@ -18,14 +18,18 @@ class _ProductListPageState extends State<ProductListPage> {
       'name': 'Produto 1',
       'quantity': 10,
       'price': 19.99,
-      'imageUrls': ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPjdt3COye-stiyIAoH6hDjC9NWKFcVwizog&s'],
+      'imageUrls': [
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPjdt3COye-stiyIAoH6hDjC9NWKFcVwizog&s'
+      ],
     },
     {
       'id': 2,
       'name': 'Produto 2',
       'quantity': 5,
       'price': 29.99,
-      'imageUrls': ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPjdt3COye-stiyIAoH6hDjC9NWKFcVwizog&s'],
+      'imageUrls': [
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPjdt3COye-stiyIAoH6hDjC9NWKFcVwizog&s'
+      ],
     },
     {
       'id': 3,
@@ -154,8 +158,6 @@ class _ProductListPageState extends State<ProductListPage> {
             ),
           ),
         );
-
-
       },
     );
   }

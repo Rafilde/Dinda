@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_end_mobile/shared/app_routes.dart';
-import '../../shared/colors.dart';
-import '../../shared/widgets/app_bar.dart';
+import 'package:front_end_mobile/shared/colors.dart';
 
 class RegisterProductPage extends StatefulWidget {
   const RegisterProductPage({super.key});
@@ -11,212 +10,166 @@ class RegisterProductPage extends StatefulWidget {
 }
 
 class _RegisterProductPageState extends State<RegisterProductPage> {
-  final _formKey = GlobalKey<FormState>();
+  /*final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();*/
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        leading: IconButton(
-          icon: const Icon(Icons.close, color: AppColors.white),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, AppRoutes.HOME);
-          },
-        ),
-      ),
-      body: body(),
-    );
-  }
-
-  Widget body() {
-    return ListView(
-      children: <Widget>[
-        const AppBarWidget(title: 'Registrar Produto'),
-        buildForm,
-      ],
-    );
-  }
-
-  Widget get appBarRow {
-    return Row(
-      children: <Widget>[
-        titleTextAppBar,
-      ],
-    );
-  }
-
-  Widget get titleTextAppBar {
-    return Flexible(
-      child: Container(
-        alignment: Alignment.center,
-        child: const Text(
-          "Registrar Produto",
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: AppColors.blackLight,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget get buildForm {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(color: AppColors.primaryColor),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildProductNameField(),
-            const SizedBox(height: 16),
-            _buildQuantityField(),
-            const SizedBox(height: 16),
-            _buildPriceField(),
-            const SizedBox(height: 16),
-            _buildImagePreview(),
-            const SizedBox(height: 16),
-            buildElevatedButton(
-              text: "Adicionar Foto(s)",
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            IconButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, AppRoutes.HOME);
+                },
+                padding: const EdgeInsets.all(20),
+                icon: const Icon(Icons.close),
+                color: Colors.white),
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Resgitrar Produto",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.white,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Preencha os campos abaixo para cadastrar um novo produto",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 16),
-            buildElevatedButton(
-              text: "Cadastrar Produto",
-            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(60),
+                        topRight: Radius.circular(60))),
+                child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey.shade200))),
+                                  child: const TextField(
+                                    decoration: InputDecoration(
+                                        hintText: "Email or Phone number",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                        border: InputBorder.none),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey.shade200))),
+                                  child: const TextField(
+                                    decoration: InputDecoration(
+                                        hintText: "Email or Phone number",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                        border: InputBorder.none),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey.shade200))),
+                                  child: const TextField(
+                                    decoration: InputDecoration(
+                                        hintText: "Email or Phone number",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                        border: InputBorder.none),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          OutlinedButton.icon(
+                            onPressed: () {},
+                            icon: const Icon(Icons.camera_alt,
+                                color: AppColors.productDescription),
+                            label: const Text(
+                              "Adicionar Foto",
+                              style: TextStyle(
+                                  color: AppColors.productDescription,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  color: AppColors.productDescription),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 30),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          MaterialButton(
+                            onPressed: () {},
+                            height: 50,
+                            // margin: EdgeInsets.symmetric(horizontal: 50),
+                            color: AppColors.primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            // decoration: BoxDecoration(
+                            // ),
+                            child: const Center(
+                              child: Text(
+                                "Cadastrar produto",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+              ),
+            )
           ],
         ),
-      ),
-    );
-  }
-
-  Widget buildElevatedButton({
-    required String text,
-  }) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        padding: EdgeInsets.all(15),
-        backgroundColor: AppColors.primaryColor,
-        foregroundColor: AppColors.white,
-        textStyle: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.normal,
-        ),
-      ),
-      onPressed: null,
-      child: Text(text),
-    );
-  }
-
-  Widget _buildProductNameField() {
-    return TextFormField(
-      controller: _nameController,
-      cursorColor: AppColors.primaryColor,
-      decoration: InputDecoration(
-        labelText: "Nome",
-        labelStyle: TextStyle(color: AppColors.blackLight),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blackLight),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blackLight),
-        ),
-        border: OutlineInputBorder(),
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Por favor, insira o nome do produto";
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildQuantityField() {
-    return TextFormField(
-      controller: _quantityController,
-      cursorColor: AppColors.primaryColor,
-      decoration: InputDecoration(
-        labelText: "Quantidade",
-        labelStyle: TextStyle(color: AppColors.blackLight),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blackLight),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blackLight),
-        ),
-        border: OutlineInputBorder(),
-      ),
-      keyboardType: TextInputType.number,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Por favor, insira a quantidade do produto";
-        }
-        if (int.tryParse(value) == null) {
-          return "Por favor, insira um número válido";
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildPriceField() {
-    return TextFormField(
-      controller: _priceController,
-      cursorColor: AppColors.primaryColor,
-      decoration: InputDecoration(
-        labelText: "Preço",
-        labelStyle: TextStyle(color: AppColors.blackLight),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blackLight),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.blackLight),
-        ),
-        border: OutlineInputBorder(),
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Por favor, insira o preço do produto";
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildImagePreview() {
-    final images = <String>[];
-    if (images.isEmpty) {
-      return Center(child: const Text("Nenhuma imagem selecionada"));
-    }
-    return SizedBox(
-      height: 200,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: images.length,
-        itemBuilder: (context, index) {
-          return Stack(
-            children: [
-              Icon(Icons.image),
-              Positioned(
-                right: 0,
-                child: IconButton(
-                    icon: const Icon(Icons.remove_circle),
-                    onPressed: () => null,
-                    color: AppColors.red),
-              ),
-            ],
-          );
-        },
       ),
     );
   }
