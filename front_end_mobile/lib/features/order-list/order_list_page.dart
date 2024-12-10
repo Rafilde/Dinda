@@ -20,7 +20,7 @@ class _OrderListPageState extends State<OrderListPage> {
 
   Widget body() {
     return ListView(
-      children: <Widget>[const AppBarWidget(title: 'Pedidos')],
+      children: const <Widget>[AppBarWidget(title: 'Pedidos')],
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_end_mobile/shared/app_routes.dart';
 import '../../shared/colors.dart';
 import '../../shared/widgets/app_bar.dart';
 import '../../shared/widgets/stylish_float_action_button.dart';
@@ -48,6 +49,7 @@ class _ProductListPageState extends State<ProductListPage> {
       backgroundColor: AppColors.backgroundColor,
       floatingActionButton: StylishFAB(
         onPressed: () {
+          Navigator.pushReplacementNamed(context, AppRoutes.REGISTER_PRODUCT);
         },
         icon: Icons.add,
         color: AppColors.primaryColor,

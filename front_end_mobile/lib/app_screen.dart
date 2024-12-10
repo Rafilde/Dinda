@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'features/home/home.dart';
+import 'package:front_end_mobile/shared/app_routes.dart';
 import 'features/order-list/cubit/order_list_cubit.dart';
 
 class AppScreen extends StatefulWidget {
@@ -20,9 +19,9 @@ class _AppScreenState extends State<AppScreen> {
           create: (context) => OrderListCubit(),
         ),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        routes: AppRoutes.routes,
       ),
     );
   }
