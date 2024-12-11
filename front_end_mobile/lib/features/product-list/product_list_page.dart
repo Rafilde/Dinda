@@ -53,7 +53,7 @@ class _ProductListPageState extends State<ProductListPage> {
       backgroundColor: AppColors.backgroundColor,
       floatingActionButton: StylishFAB(
         onPressed: () {
-          Navigator.pushReplacementNamed(context, AppRoutes.REGISTER_PRODUCT);
+          Navigator.pushReplacementNamed(context, AppRoutes.registerProduct);
         },
         icon: Icons.add,
         color: AppColors.primaryColor,
@@ -62,13 +62,13 @@ class _ProductListPageState extends State<ProductListPage> {
       body: Column(
         children: <Widget>[
           const AppBarWidget(title: 'Produtos'),
-          Expanded(child: ProductsListInfo),
+          Expanded(child: productsListInfo),
         ],
       ),
     );
   }
 
-  Widget get ProductsListInfo {
+  Widget get productsListInfo {
     if (products.isEmpty) {
       return const Center(
         child: Text(

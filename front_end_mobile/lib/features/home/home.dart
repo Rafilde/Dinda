@@ -19,8 +19,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _pages = [
-      AppRoutes.routes[AppRoutes.PRODUCT_LIST]!(context),
-      AppRoutes.routes[AppRoutes.ORDER_LIST]!(context),
+      AppRoutes.routes[AppRoutes.productList]!(context),
+      AppRoutes.routes[AppRoutes.orderList]!(context),
     ];
   }
 

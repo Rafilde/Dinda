@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:front_end_mobile/shared/app_routes.dart';
 import 'package:front_end_mobile/shared/colors.dart';
 
@@ -14,6 +16,16 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();*/
+  final MoneyMaskedTextController _moneyController = MoneyMaskedTextController(
+    leftSymbol: 'R\$',
+    decimalSeparator: ',',
+    thousandSeparator: '.',
+  );
+
+  final List<String> images = [
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ65blU_xkxMQHgy2STZTc5n9GA2oyP8paukg&s',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLLoWFrrn79xSUSqaxh1JguzEXQasMQuhbTA&s'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +38,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           children: <Widget>[
             IconButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, AppRoutes.HOME);
+                  Navigator.pushReplacementNamed(context, AppRoutes.home);
                 },
                 padding: const EdgeInsets.all(20),
                 icon: const Icon(Icons.close),
@@ -81,7 +93,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                                               color: Colors.grey.shade200))),
                                   child: const TextField(
                                     decoration: InputDecoration(
-                                        hintText: "Email or Phone number",
+                                        hintText: "Informe o nome do produto",
                                         hintStyle:
                                             TextStyle(color: Colors.grey),
                                         border: InputBorder.none),
@@ -93,9 +105,14 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                                       border: Border(
                                           bottom: BorderSide(
                                               color: Colors.grey.shade200))),
-                                  child: const TextField(
-                                    decoration: InputDecoration(
-                                        hintText: "Email or Phone number",
+                                  child: TextField(
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                        hintText:
+                                            "Informe a quantidade de produtos",
                                         hintStyle:
                                             TextStyle(color: Colors.grey),
                                         border: InputBorder.none),
@@ -107,17 +124,23 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                                       border: Border(
                                           bottom: BorderSide(
                                               color: Colors.grey.shade200))),
-                                  child: const TextField(
-                                    decoration: InputDecoration(
-                                        hintText: "Email or Phone number",
-                                        hintStyle:
-                                            TextStyle(color: Colors.grey),
-                                        border: InputBorder.none),
+                                  child: TextField(
+                                    controller: _moneyController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      hintText: "Informe o preço do produto",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          _buildImagePreview(),
                           const SizedBox(
                             height: 40,
                           ),
@@ -170,6 +193,49 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildImagePreview() {
+    //final images = viewModel.images;
+    if (images.isEmpty) {
+      return const Center(
+          child: Text(
+        "Nenhuma imagem adicionada",
+        style: TextStyle(
+          color: AppColors.productDescription,
+        ),
+      ));
+    }
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: images.length,
+        itemBuilder: (context, index) {
+          return Stack(
+            children: [
+              Image.network(
+                images[index],
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+              Positioned(
+                right: 0,
+                child: IconButton(
+                    icon: const Icon(Icons.remove_circle),
+                    onPressed: () {
+                      setState(() {
+                        images.removeAt(index);
+                      });
+                    },
+                    color: AppColors.red),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
