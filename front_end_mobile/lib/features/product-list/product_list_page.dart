@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_end_mobile/features/product-details/product_datils_page.dart';
 import 'package:front_end_mobile/shared/app_routes.dart';
 import '../../shared/colors.dart';
 import '../../shared/widgets/app_bar.dart';
@@ -83,82 +84,118 @@ class _ProductListPageState extends State<ProductListPage> {
       itemBuilder: (context, index) {
         var product = products[index];
         return Card(
-          elevation: 4,
-          shadowColor: Colors.black.withOpacity(0.15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          color: AppColors.cardBackgroundColor,
-          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.network(
-                    product['imageUrls'].isNotEmpty
-                        ? product['imageUrls'][0]
-                        : '',
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.image_not_supported,
-                      size: 50,
+            elevation: 4,
+            shadowColor: Colors.black.withOpacity(0.15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            color: AppColors.cardBackgroundColor,
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () {
+                navigateToItemDetail(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.network(
+                        product['imageUrls'].isNotEmpty
+                            ? product['imageUrls'][0]
+                            : '',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                          Icons.image_not_supported,
+                          size: 50,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product['name'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 22,
-                          color: AppColors.productTitle,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        'Quantidade: ${product['quantity']}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          color: AppColors.productDescription,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColors.lightGreen,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        padding: const EdgeInsets.all(5),
-                        child: Center(
-                          child: Text(
-                            'Preço: R\$${product['price']}',
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product['name'],
                             style: const TextStyle(
-                              color: AppColors.green,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 22,
+                              color: AppColors.productTitle,
                             ),
                           ),
-                        ),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Quantidade: ${product['quantity']}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: AppColors.productDescription,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: AppColors.lightGreen,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            padding: const EdgeInsets.all(5),
+                            child: Center(
+                              child: Text(
+                                'Preço: R\$${product['price']}',
+                                style: const TextStyle(
+                                  color: AppColors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 20),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColors.primaryColor,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        );
+              ),
+            ));
       },
+    );
+  }
+
+  Future navigateToItemDetail(BuildContext context) {
+    return Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return ProductDatilsPage();
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.ease;
+
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      ),
     );
   }
 }
