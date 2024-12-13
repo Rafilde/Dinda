@@ -11,6 +11,7 @@ class AppColors {
   static const Color productTitle = Color(0xFF191919);
   static const Color productDescription = Color(0xFF9A9A9A);
   static const Color cardBackgroundColor = Color(0xF9FFFFFF);
+  static const Color cardBackgroundColorHover = Color(0xF9E1E1E1);
 
   //COLORS
   static const Color lightGreen = Color(0xFFF0FFEC);

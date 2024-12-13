@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:front_end_mobile/shared/app_routes.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../../shared/colors.dart';
+import '../order-list/order_list_page.dart';
+import '../product-list/product_list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,16 +14,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  late List<Widget> _pages;
-
-  @override
-  void initState() {
-    super.initState();
-    _pages = [
-      AppRoutes.routes[AppRoutes.productList]!(context),
-      AppRoutes.routes[AppRoutes.orderList]!(context),
-    ];
-  }
+  late List<Widget> _pages = [
+    const ProductListPage(),
+    const OrderListPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {

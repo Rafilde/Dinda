@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_end_mobile/features/product-details/product_datils_page.dart';
-import 'package:front_end_mobile/shared/app_routes.dart';
+import 'package:front_end_mobile/features/register-product/register_product_page.dart';
 import '../../shared/colors.dart';
 import '../../shared/widgets/app_bar.dart';
 import '../../shared/widgets/stylish_float_action_button.dart';
@@ -54,7 +54,12 @@ class _ProductListPageState extends State<ProductListPage> {
       backgroundColor: AppColors.backgroundColor,
       floatingActionButton: StylishFAB(
         onPressed: () {
-          Navigator.pushReplacementNamed(context, AppRoutes.registerProduct);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const RegisterProductPage(),
+            ),
+          );
         },
         icon: Icons.add,
         color: AppColors.primaryColor,
@@ -93,6 +98,7 @@ class _ProductListPageState extends State<ProductListPage> {
             margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
+              hoverColor: AppColors.cardBackgroundColorHover,
               onTap: () {
                 navigateToItemDetail(context);
               },
@@ -179,7 +185,7 @@ class _ProductListPageState extends State<ProductListPage> {
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
-          return ProductDatilsPage();
+          return ProductDetailsPage(productName: 'OI', price: 234, quantity: 234, imageUrls: ['https://delicious.com.br/wp-content/uploads/2020/10/WhatsApp-Image-2022-07-18-at-11.39.00-1.jpeg', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZZ3beQj_u4ST1UXT_xQEVtRtizxFn4bmVuw&s'],);
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(1.0, 0.0);

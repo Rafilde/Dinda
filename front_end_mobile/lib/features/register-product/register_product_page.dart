@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:front_end_mobile/shared/app_routes.dart';
 import 'package:front_end_mobile/shared/colors.dart';
 
 class RegisterProductPage extends StatefulWidget {
@@ -38,7 +37,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           children: <Widget>[
             IconButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, AppRoutes.home);
+                  Navigator.pop(context);
                 },
                 padding: const EdgeInsets.all(20),
                 icon: const Icon(Icons.close),
