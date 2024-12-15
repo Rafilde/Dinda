@@ -12,10 +12,10 @@ class OrderListPage extends StatefulWidget {
 class _OrderListPageState extends State<OrderListPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(child:  Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: body(),
-    );
+    ));
   }
 
   Widget body() {
