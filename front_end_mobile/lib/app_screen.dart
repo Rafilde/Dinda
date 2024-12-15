@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'features/home/home.dart';
+import 'package:front_end_mobile/features/home/home.dart';
 import 'features/order-list/cubit/order_list_cubit.dart';
 
 class AppScreen extends StatefulWidget {

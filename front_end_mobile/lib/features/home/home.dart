@@ -12,10 +12,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
+  late List<Widget> _pages = [
     const ProductListPage(),
     const OrderListPage(),
   ];
@@ -26,31 +25,32 @@ class _HomePageState extends State<HomePage> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
         color: AppColors.bottomNavigator,
-        child: Padding(padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
           child: GNav(
-            backgroundColor: AppColors.bottomNavigator,
-            color: AppColors.bottomNavigatorIcon,
-            activeColor: AppColors.bottomNavigatorIconActive,
-            tabBackgroundColor: AppColors.bottomNavigatorTabBackground,
-            gap: 20,
-            padding: const EdgeInsets.all(16),
+              backgroundColor: AppColors.bottomNavigator,
+              color: AppColors.bottomNavigatorIcon,
+              activeColor: AppColors.bottomNavigatorIconActive,
+              tabBackgroundColor: AppColors.bottomNavigatorTabBackground,
+              gap: 20,
+              padding: const EdgeInsets.all(16),
               selectedIndex: _selectedIndex,
               onTabChange: (index) {
                 setState(() {
                   _selectedIndex = index;
                 });
               },
-            tabs: const [
-              GButton(
-                icon: Icons.home,
-                text: 'Produtos',
-              ),
-              GButton(
-                icon: Icons.person,
-                text: 'Pedidos',
-              ),
-            ]
-        ),),
+              tabs: const [
+                GButton(
+                  icon: Icons.home,
+                  text: 'Produtos',
+                ),
+                GButton(
+                  icon: Icons.person,
+                  text: 'Pedidos',
+                ),
+              ]),
+        ),
       ),
     );
   }

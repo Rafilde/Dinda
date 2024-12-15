@@ -11,6 +11,9 @@ class AppColors {
   static const Color productTitle = Color(0xFF191919);
   static const Color productDescription = Color(0xFF9A9A9A);
   static const Color cardBackgroundColor = Color(0xF9FFFFFF);
+  static const Color cardBackgroundColorHover = Color(0xF9E1E1E1);
+  static const Color success = Color(0xFF00C853);
+  static const Color error = Color(0xFFD32F2F);
 
   //COLORS
   static const Color lightGreen = Color(0xFFF0FFEC);
@@ -19,4 +22,7 @@ class AppColors {
   static const Color blackLight = Color(0xFF474747);
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
+  static const Color transparent = Color(0x9A9A9A);
+  static const Color grey = Color(0x9EA5A5A5);
+  static const Color greyLight = Color(0x9EDADADA);
 }
