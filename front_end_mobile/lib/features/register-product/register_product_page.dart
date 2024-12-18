@@ -258,11 +258,37 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     String updatedName = _nameController.text.trim();
     String? updatedPrice = _priceController.text;
     int? updatedQuantity = int.tryParse(_quantityController.text);
-
-    if (updatedName.isEmpty || updatedPrice.isEmpty || updatedQuantity == null) {
+    int updatedImage = images.length;
+    if (updatedName.isEmpty || updatedPrice.isEmpty || updatedQuantity == null || updatedImage == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, preencha todos os campos corretamente.')),
+        SnackBar(
+          content: const Row(
+            children: [
+              Icon(Icons.error, color: AppColors.white),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Por favor, preencha todos os campos corretamente.',
+                  style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          action: SnackBarAction(
+            label: 'OK',
+            textColor: AppColors.white,
+            onPressed: () {},
+          ),
+          duration: const Duration(seconds: 4),
+        ),
       );
+
       return;
     }
 
