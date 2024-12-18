@@ -11,16 +11,25 @@ class RegisterProductPage extends StatefulWidget {
 }
 
 class _RegisterProductPageState extends State<RegisterProductPage> {
-  final MoneyMaskedTextController _moneyController = MoneyMaskedTextController(
+  late final TextEditingController _nameController = TextEditingController();
+  late final TextEditingController _quantityController = TextEditingController();
+  final MoneyMaskedTextController _priceController = MoneyMaskedTextController(
     leftSymbol: 'R\$',
     decimalSeparator: ',',
     thousandSeparator: '.',
   );
-
   final List<String> images = [
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ65blU_xkxMQHgy2STZTc5n9GA2oyP8paukg&s',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLLoWFrrn79xSUSqaxh1JguzEXQasMQuhbTA&s'
   ];
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _priceController.dispose();
+    _quantityController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,15 +123,17 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
       child: Column(
         children: <Widget>[
           _buildTextField(
+            controller: _nameController,
             hintText: "Informe o nome do produto",
           ),
           _buildTextField(
+            controller: _quantityController,
             hintText: "Informe a quantidade de produtos",
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
           ),
           _buildTextField(
-            controller: _moneyController,
+            controller: _priceController,
             hintText: "Informe o preço do produto",
             keyboardType: TextInputType.number,
           ),
@@ -132,14 +143,14 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   }
 
   Widget _buildTextField({
-    TextEditingController? controller,
+    required TextEditingController controller,
     String? hintText,
     TextInputType keyboardType = TextInputType.text,
     List<TextInputFormatter>? inputFormatters,
   }) {
     return Container(
       padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: AppColors.greyLight)),
       ),
       child: TextField(
@@ -226,7 +237,9 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
 
   Widget _buildSubmitButton() {
     return MaterialButton(
-      onPressed: () {},
+      onPressed: () {
+        _saveChanges();
+      },
       height: 50,
       color: AppColors.primaryColor,
       shape: RoundedRectangleBorder(
@@ -237,6 +250,97 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           "Cadastrar produto",
           style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
+      ),
+    );
+  }
+
+  void _saveChanges() {
+    String updatedName = _nameController.text.trim();
+    String? updatedPrice = _priceController.text;
+    int? updatedQuantity = int.tryParse(_quantityController.text);
+
+    if (updatedName.isEmpty || updatedPrice.isEmpty || updatedQuantity == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, preencha todos os campos corretamente.')),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Cadastrar Produto',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: AppColors.black,
+          ),
+        ),
+        content: const Text(
+          'Deseja cadastrar esse produto?',
+          style: TextStyle(
+            fontSize: 16,
+            color: AppColors.blackLight,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        backgroundColor: AppColors.white,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(
+                color: AppColors.error,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Volta à lista de produtos após salvar
+              _successMessage(context, 'Produto cadastrado com sucesso!');
+            },
+            child: const Text(
+              'Cadastrar',
+              style: TextStyle(
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _successMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.success,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.check, color: AppColors.white),
+              const SizedBox(width: 10),
+              Text(
+                message,
+                style: const TextStyle(color: AppColors.white),
+              ),
+            ],
+          ),
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: AppColors.transparent,
+        elevation: 0,
       ),
     );
   }
