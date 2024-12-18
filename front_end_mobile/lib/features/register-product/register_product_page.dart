@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
@@ -288,7 +289,6 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           duration: const Duration(seconds: 4),
         ),
       );
-
       return;
     }
 
@@ -326,9 +326,18 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             ),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(context).pop();
               Navigator.of(context).pop(); // Volta à lista de produtos após salvar
+              final productRef = FirebaseFirestore.instance.collection('products').doc();
+
+              await productRef.set({
+                'name': updatedName,
+                'price': updatedPrice,
+                'quantity': updatedQuantity,
+                'images': images,
+                'createdAt': FieldValue.serverTimestamp(),
+              });
               _successMessage(context, 'Produto cadastrado com sucesso!');
             },
             child: const Text(
