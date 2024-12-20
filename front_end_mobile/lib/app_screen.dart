@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:front_end_mobile/features/home/home.dart';
 import 'features/order-list/cubit/order_list_cubit.dart';
+import 'features/register-product/cubit/register_product_cubit.dart';
 
 class AppScreen extends StatefulWidget {
   const AppScreen({super.key});
@@ -17,6 +18,9 @@ class _AppScreenState extends State<AppScreen> {
       providers: [
        BlocProvider<OrderListCubit>(
           create: (context) => OrderListCubit(),
+        ),
+        BlocProvider<RegisterProductCubit>(
+          create: (context) => RegisterProductCubit(),
         ),
       ],
       child: const MaterialApp(

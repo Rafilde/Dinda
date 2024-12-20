@@ -1,8 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:front_end_mobile/shared/colors.dart';
+
+import 'cubit/register_product_cubit.dart';
 
 class RegisterProductPage extends StatefulWidget {
   const RegisterProductPage({super.key});
@@ -34,23 +36,26 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(color: AppColors.primaryColor),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _buildCloseButton(context),
-            _buildTitleSection(),
-            const SizedBox(height: 20),
-            Expanded(
-              child: _buildFormSection(),
-            ),
-          ],
+    return BlocProvider(
+      create: (context) => RegisterProductCubit(),
+      child: SafeArea(child: Scaffold(
+        body: Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(color: AppColors.primaryColor),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _buildCloseButton(context),
+              _buildTitleSection(),
+              const SizedBox(height: 20),
+              Expanded(
+                child: _buildFormSection(),
+              ),
+            ],
+          ),
         ),
-      ),
-    ),);
+      ),),
+    );
   }
 
   Widget _buildCloseButton(BuildContext context) {
@@ -131,7 +136,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             controller: _quantityController,
             hintText: "Informe a quantidade de produtos",
             keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4),],
           ),
           _buildTextField(
             controller: _priceController,
@@ -260,6 +265,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     String? updatedPrice = _priceController.text;
     int? updatedQuantity = int.tryParse(_quantityController.text);
     int updatedImage = images.length;
+    debugPrint('Name: $updatedName' 'Price: $updatedPrice' 'Quantity: $updatedQuantity' 'Image: $updatedImage');
     if (updatedName.isEmpty || updatedPrice.isEmpty || updatedQuantity == null || updatedImage == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -328,16 +334,13 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
-              Navigator.of(context).pop(); // Volta à lista de produtos após salvar
-              final productRef = FirebaseFirestore.instance.collection('products').doc();
-
-              await productRef.set({
-                'name': updatedName,
-                'price': updatedPrice,
-                'quantity': updatedQuantity,
-                'images': images,
-                'createdAt': FieldValue.serverTimestamp(),
-              });
+              Navigator.of(context).pop();
+              BlocProvider.of<RegisterProductCubit>(context).createProduct(
+                updatedName,
+                updatedPrice,
+                updatedQuantity,
+                images,
+              );
               _successMessage(context, 'Produto cadastrado com sucesso!');
             },
             child: const Text(
