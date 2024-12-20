@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:front_end_mobile/features/home/home.dart';
-import 'features/order-list/cubit/order_list_cubit.dart';
-import 'features/register-product/cubit/register_product_cubit.dart';
+import 'package:front_end_mobile/shared/app_bloc_providers.dart';
 
 class AppScreen extends StatefulWidget {
   const AppScreen({super.key});
@@ -15,14 +14,7 @@ class _AppScreenState extends State<AppScreen> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-       BlocProvider<OrderListCubit>(
-          create: (context) => OrderListCubit(),
-        ),
-        BlocProvider<RegisterProductCubit>(
-          create: (context) => RegisterProductCubit(),
-        ),
-      ],
+      providers: AppBlocProviders.getProviders(),
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: HomePage(),

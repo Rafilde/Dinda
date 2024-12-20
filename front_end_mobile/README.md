@@ -12,6 +12,7 @@ flutter_masked_text2: ^0.9.1
 carousel_slider: ^5.0.0
 firebase_core: ^3.8.1
 cloud_firestore: ^5.5.1
+get_it: ^8.0.3
 ```
 
 ### Descrição das Dependências:
@@ -23,7 +24,7 @@ cloud_firestore: ^5.5.1
 - **carousel_slider**: Exibição de carrosséis para imagens e banners.
 - **firebase_core**: Integração do aplicativo com o Firebase.
 - **cloud_firestore**: Banco de dados em tempo real para salvar doces e pedidos.
-
+- **get_it**: Injeção de dependências para gerenciamento de estado.
 ---
 
 ## Estrutura do Projeto
