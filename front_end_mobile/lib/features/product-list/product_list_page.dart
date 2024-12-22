@@ -62,7 +62,6 @@ class _ProductListPageState extends State<ProductListPage> {
     ));
   }
 
-  // Botão de ação flutuante
   Widget _buildFloatingActionButton() {
     return StylishFAB(
       onPressed: () {
@@ -79,7 +78,6 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 
-  // Exibe a lista de produtos ou uma mensagem quando não houver produtos
   Widget _buildProductListInfo() {
     if (products.isEmpty) {
       return const Center(
@@ -99,7 +97,6 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 
-  // Cria o card de cada produto
   Widget _buildProductCard(Map<String, dynamic> product) {
     return Card(
       elevation: 4,
@@ -123,7 +120,7 @@ class _ProductListPageState extends State<ProductListPage> {
               const SizedBox(width: 20),
               _buildProductDetails(product),
               const SizedBox(width: 20),
-              Icon(
+              const Icon(
                 Icons.arrow_forward_ios,
                 color: AppColors.primaryColor,
               ),
@@ -143,9 +140,14 @@ class _ProductListPageState extends State<ProductListPage> {
         width: 100,
         height: 100,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => const Icon(
-          Icons.image_not_supported,
-          size: 50,
+        errorBuilder: (context, error, stackTrace) =>  Container(
+          width: 100,
+          height: 100,
+          color: AppColors.greyLight,
+          child: const Icon(
+            Icons.error_outline,
+            color: AppColors.grey,
+          ),
         ),
       ),
     );

@@ -267,37 +267,9 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     int updatedImage = images.length;
     debugPrint('Name: $updatedName' 'Price: $updatedPrice' 'Quantity: $updatedQuantity' 'Image: $updatedImage');
     if (updatedName.isEmpty || updatedPrice.isEmpty || updatedQuantity == null || updatedImage == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
-            children: [
-              Icon(Icons.error, color: AppColors.white),
-              SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'Por favor, preencha todos os campos corretamente.',
-                  style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: AppColors.error,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.all(16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          action: SnackBarAction(
-            label: 'OK',
-            textColor: AppColors.white,
-            onPressed: () {},
-          ),
-          duration: const Duration(seconds: 4),
-        ),
-      );
+      _incompleteFieldsSnackbar(context);
       return;
     }
-
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -334,13 +306,15 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
-              Navigator.of(context).pop();
+
               BlocProvider.of<RegisterProductCubit>(context).createProduct(
                 updatedName,
                 updatedPrice,
                 updatedQuantity,
                 images,
               );
+
+              Navigator.of(context).pop();
               _successMessage(context, 'Produto cadastrado com sucesso!');
             },
             child: const Text(
@@ -379,6 +353,64 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
         behavior: SnackBarBehavior.floating,
         backgroundColor: AppColors.transparent,
         elevation: 0,
+      ),
+    );
+  }
+
+  _errorSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.error,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.error, color: AppColors.white),
+              const SizedBox(width: 10),
+              Text(
+                message,
+                style: const TextStyle(color: AppColors.white),
+              ),
+            ],
+          ),
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: AppColors.transparent,
+        elevation: 0,
+      ),
+    );
+  }
+
+  _incompleteFieldsSnackbar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.error, color: AppColors.white),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Por favor, preencha todos os campos corretamente.',
+                style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: AppColors.error,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: AppColors.white,
+          onPressed: () {},
+        ),
+        duration: const Duration(seconds: 4),
       ),
     );
   }

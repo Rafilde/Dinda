@@ -7,7 +7,7 @@ class AppColors {
   static const Color bottomNavigatorTabBackground = Color(0xFFF0F5FF);
   static const Color bottomNavigatorIconActive = Color(0xFF0080FF);
   static const Color bottomNavigatorIcon = Color(0xFF878787);
-  static const Color backgroundColor = Color(0xFFF9FAFB);
+  static const Color backgroundColor = Color(0xFFE6E6E6);
   static const Color productTitle = Color(0xFF191919);
   static const Color productDescription = Color(0xFF9A9A9A);
   static const Color cardBackgroundColor = Color(0xF9FFFFFF);
