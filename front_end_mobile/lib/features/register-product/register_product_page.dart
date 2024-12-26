@@ -314,8 +314,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                 images,
               );
 
-              Navigator.of(context).pop();
               _successMessage(context, 'Produto cadastrado com sucesso!');
+              Navigator.of(context).pop();
             },
             child: const Text(
               'Cadastrar',
