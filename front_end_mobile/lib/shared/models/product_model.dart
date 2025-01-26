@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ProductModel {
   final String id;
   final String name;
-  final String price;
+  final double price;
   final int quantity;
   final List<String> imageUrl;
   final Timestamp createdAt;

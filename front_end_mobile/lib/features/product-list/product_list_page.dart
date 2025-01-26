@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_end_mobile/features/product-details/product_datils_page.dart';
+import 'package:front_end_mobile/features/product-list/services/product_list_services.dart';
 import 'package:front_end_mobile/features/register-product/register_product_page.dart';
 import '../../shared/colors.dart';
 import '../../shared/widgets/app_bar.dart';
@@ -13,53 +14,48 @@ class ProductListPage extends StatefulWidget {
 }
 
 class _ProductListPageState extends State<ProductListPage> {
-  final List<Map<String, dynamic>> products = [
-    {
-      'id': 1,
-      'name': 'Produto 1',
-      'quantity': 10,
-      'price': 19.99,
-      'imageUrls': [
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPjdt3COye-stiyIAoH6hDjC9NWKFcVwizog&s'
-      ],
-    },
-    {
-      'id': 2,
-      'name': 'Produto 2',
-      'quantity': 5,
-      'price': 29.99,
-      'imageUrls': [
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPjdt3COye-stiyIAoH6hDjC9NWKFcVwizog&s'
-      ],
-    },
-    {
-      'id': 3,
-      'name': 'Produto 3',
-      'quantity': 15,
-      'price': 9.99,
-      'imageUrls': ['https://via.placeholder.com/150'],
-    },
-    {
-      'id': 4,
-      'name': 'Produto 4',
-      'quantity': 20,
-      'price': 39.99,
-      'imageUrls': ['https://via.placeholder.com/150'],
-    },
-  ];
+  late List<Map<String, dynamic>> products = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+  }
+
+  Future<void> _loadProducts() async {
+    try {
+      final fetchedProducts = await ProductListServices().fetchProducts();
+      setState(() {
+        products = fetchedProducts;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Erro ao carregar produtos: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child: Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      floatingActionButton: _buildFloatingActionButton(),
-      body: Column(
-        children: <Widget>[
-          const AppBarWidget(title: 'Produtos'),
-          Expanded(child: _buildProductListInfo()),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        floatingActionButton: _buildFloatingActionButton(),
+        body: Column(
+          children: <Widget>[
+            const AppBarWidget(title: 'Produtos'),
+            Expanded(
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator()) // Carregando
+                  : _buildProductListInfo(), // Lista de produtos
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   Widget _buildFloatingActionButton() {
@@ -136,7 +132,7 @@ class _ProductListPageState extends State<ProductListPage> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: Image.network(
-        product['imageUrls'].isNotEmpty ? product['imageUrls'][0] : '',
+        product['imageUrl'].isNotEmpty ? product['imageUrl'][0] : '',
         width: 100,
         height: 100,
         fit: BoxFit.cover,
@@ -216,7 +212,7 @@ class _ProductListPageState extends State<ProductListPage> {
             productName: product['name'],
             price: product['price'],
             quantity: product['quantity'],
-            imageUrls: List<String>.from(product['imageUrls']),
+            imageUrls: List<String>.from(product['imageUrl']),
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {

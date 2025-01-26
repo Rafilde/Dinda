@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:front_end_mobile/shared/colors.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'cubit/register_product_cubit.dart';
 
@@ -21,10 +24,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     decimalSeparator: ',',
     thousandSeparator: '.',
   );
-  final List<String> images = [
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ65blU_xkxMQHgy2STZTc5n9GA2oyP8paukg&s',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLLoWFrrn79xSUSqaxh1JguzEXQasMQuhbTA&s'
-  ];
+  final List<String> images = [];
 
   @override
   void dispose() {
@@ -34,29 +34,78 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     super.dispose();
   }
 
+  Future<void> pickImages() async {
+    final picker = ImagePicker();
+    final pickedFiles = await picker.pickMultiImage();
+
+    if (pickedFiles != null) {
+      setState(() {
+        images.clear();
+        images.addAll(pickedFiles.map((file) => file.path));
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => RegisterProductCubit(),
-      child: SafeArea(child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(color: AppColors.primaryColor),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildCloseButton(context),
-              _buildTitleSection(),
-              const SizedBox(height: 20),
-              Expanded(
-                child: _buildFormSection(),
+      child: BlocListener<RegisterProductCubit, RegisterProductState>(
+        listener: (context, state) {
+          if (state is ErrorRegisterProductState) {
+            _errorSnackBar(context, state.message);
+          }
+          if (state is SuccessRegisterProductState) {
+            _successMessage(context, 'Produto cadastrado com sucesso!');
+            Navigator.of(context).pop();
+          }
+          if (state is LoadingRegisterProductState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Row(
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Cadastrando produto...',
+                        style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                backgroundColor: AppColors.primaryColor,
+                behavior: SnackBarBehavior.floating,
+                margin: const EdgeInsets.all(16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-            ],
+            );
+          }
+        },
+        child: SafeArea(
+          child: Scaffold(
+            body: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(color: AppColors.primaryColor),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _buildCloseButton(context),
+                  _buildTitleSection(),
+                  const SizedBox(height: 20),
+                  Expanded(child: _buildFormSection()),
+                ],
+              ),
+            ),
           ),
         ),
-      ),),
+      ),
     );
   }
+
 
   Widget _buildCloseButton(BuildContext context) {
     return IconButton(
@@ -64,6 +113,78 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
       padding: const EdgeInsets.all(20),
       icon: const Icon(Icons.close),
       color: AppColors.white,
+    );
+  }
+
+  void _saveChanges() {
+    final name = _nameController.text.trim();
+    final price = _priceController.numberValue;
+    final quantityText = _quantityController.text;
+    final quantity = int.tryParse(quantityText);
+
+    if (name.isEmpty || price <= 0 || quantity == null || images.isEmpty) {
+      _incompleteFieldsSnackbar(context);
+      return;
+    }
+
+    debugPrint('Name: ${_nameController.text.trim()}' 'Price: ${_priceController.numberValue}' 'Quantity: ${int.tryParse(_quantityController.text)!}' 'Image: $images');
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Cadastrar Produto',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: AppColors.black,
+          ),
+        ),
+        content: const Text(
+          'Deseja cadastrar esse produto?',
+          style: TextStyle(
+            fontSize: 16,
+            color: AppColors.blackLight,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        backgroundColor: AppColors.white,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(
+                color: AppColors.error,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              try {
+                 BlocProvider.of<RegisterProductCubit>(context).createProduct(
+                  name,
+                  price,
+                  quantity,
+                  images,
+                );
+              } catch (e) {
+                debugPrint('Erro ao cadastrar produto: $e');
+              }
+            },
+            child: const Text(
+              'Cadastrar',
+              style: TextStyle(
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -198,8 +319,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   Widget _buildImagePreviewItem(int index) {
     return Stack(
       children: [
-        Image.network(
-          images[index],
+        Image.file(
+          File(images[index]),
           width: 200,
           height: 200,
           fit: BoxFit.cover,
@@ -222,7 +343,9 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
 
   Widget _buildAddImageButton() {
     return OutlinedButton.icon(
-      onPressed: () {},
+      onPressed: () {
+        pickImages();
+      },
       icon: const Icon(Icons.camera_alt, color: AppColors.productDescription),
       label: const Text(
         "Adicionar Foto",
@@ -256,76 +379,6 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           "Cadastrar produto",
           style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
-      ),
-    );
-  }
-
-  void _saveChanges() {
-    String updatedName = _nameController.text.trim();
-    String? updatedPrice = _priceController.text;
-    int? updatedQuantity = int.tryParse(_quantityController.text);
-    int updatedImage = images.length;
-    debugPrint('Name: $updatedName' 'Price: $updatedPrice' 'Quantity: $updatedQuantity' 'Image: $updatedImage');
-    if (updatedName.isEmpty || updatedPrice.isEmpty || updatedQuantity == null || updatedImage == 0) {
-      _incompleteFieldsSnackbar(context);
-      return;
-    }
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(
-          'Cadastrar Produto',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-            color: AppColors.black,
-          ),
-        ),
-        content: const Text(
-          'Deseja cadastrar esse produto?',
-          style: TextStyle(
-            fontSize: 16,
-            color: AppColors.blackLight,
-          ),
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        backgroundColor: AppColors.white,
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(
-              'Cancelar',
-              style: TextStyle(
-                color: AppColors.error,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-
-              BlocProvider.of<RegisterProductCubit>(context).createProduct(
-                updatedName,
-                updatedPrice,
-                updatedQuantity,
-                images,
-              );
-
-              _successMessage(context, 'Produto cadastrado com sucesso!');
-              Navigator.of(context).pop();
-            },
-            child: const Text(
-              'Cadastrar',
-              style: TextStyle(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

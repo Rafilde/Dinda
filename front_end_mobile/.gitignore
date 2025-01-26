@@ -45,4 +45,7 @@ app.*.map.json
 # Android Studio will place gradle files here
 android/app/google-services.json
 **/firebase_options.dart
+.env/
+
+
 
