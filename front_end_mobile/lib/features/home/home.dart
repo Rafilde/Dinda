@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  late List<Widget> _pages = [
+  late final List<Widget> _pages = [
     const ProductListPage(),
     const OrderListPage(),
   ];

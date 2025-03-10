@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
@@ -38,7 +36,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       leftSymbol: 'R\$',
       decimalSeparator: ',',
       thousandSeparator: '.',
-      initialValue: widget.price ?? 0.0,
+      initialValue: widget.price,
     );
   }
 

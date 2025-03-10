@@ -22,7 +22,7 @@ class AppColors {
   static const Color blackLight = Color(0xFF474747);
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
-  static const Color transparent = Color(0x9A9A9A);
+  static const Color transparent = Color(0x009a9a9a);
   static const Color grey = Color(0x9EA5A5A5);
   static const Color greyLight = Color(0x9EDADADA);
 }

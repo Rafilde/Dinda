@@ -31,7 +31,7 @@ class _ProductListPageState extends State<ProductListPage> {
         isLoading = false;
       });
     } catch (e) {
-      print('Erro ao carregar produtos: $e');
+      debugPrint('Erro ao carregar produtos: $e');
       setState(() {
         isLoading = false;
       });
@@ -96,7 +96,7 @@ class _ProductListPageState extends State<ProductListPage> {
   Widget _buildProductCard(Map<String, dynamic> product) {
     return Card(
       elevation: 4,
-      shadowColor: Colors.black.withOpacity(0.15),
+      shadowColor: Colors.black.withValues(alpha: 0.15),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),

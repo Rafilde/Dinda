@@ -38,13 +38,11 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     final picker = ImagePicker();
     final pickedFiles = await picker.pickMultiImage();
 
-    if (pickedFiles != null) {
-      setState(() {
-        images.clear();
-        images.addAll(pickedFiles.map((file) => file.path));
-      });
+    setState(() {
+      images.clear();
+      images.addAll(pickedFiles.map((file) => file.path));
+    });
     }
-  }
 
 
   @override

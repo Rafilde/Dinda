@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:uuid/uuid.dart';
 import '../../../shared/models/product_model.dart';
 
 final supabase = Supabase.instance.client;
@@ -21,7 +21,7 @@ class RegisterProductServices {
 
       return publicUrl;
     } catch (e) {
-      print('Erro ao fazer upload: $e');
+      debugPrint('Erro ao fazer upload: $e');
       return null;
     }
   }
@@ -44,10 +44,10 @@ class RegisterProductServices {
         if (imageUrl != null) {
           imageUrls.add(imageUrl);
         } else {
-          print('Erro ao processar a imagem: $imagePath');
+          debugPrint('Erro ao processar a imagem: $imagePath');
         }
       } catch (e) {
-        print('Erro ao processar a imagem $imagePath: $e');
+        debugPrint('Erro ao processar a imagem $imagePath: $e');
       }
     }
 
@@ -67,7 +67,7 @@ class RegisterProductServices {
     try {
       await saveProduct(newProduct);
     } catch (e) {
-      print('Erro ao criar o produto: $e');
+      debugPrint('Erro ao criar o produto: $e');
       throw Exception('Erro ao criar o produto: $e');
     }
   }

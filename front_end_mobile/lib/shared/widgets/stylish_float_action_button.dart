@@ -23,7 +23,7 @@ class StylishFAB extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
-      splashColor: AppColors.primaryColor.withOpacity(0.3),
+      splashColor: AppColors.primaryColor.withValues(alpha: 0.3),
       child: Icon(
         icon,
         color: iconColor,
