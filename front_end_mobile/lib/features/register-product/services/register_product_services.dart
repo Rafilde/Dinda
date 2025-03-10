@@ -29,31 +29,32 @@ class RegisterProductServices {
   Future<void> saveProduct(ProductModel product) async {
     final productRef = FirebaseFirestore.instance.collection('products').doc(product.id);
 
-    await productRef.set(product.toMap());
+    await productRef.set(product.toJson());
   }
 
   Future<void> createProduct(
       String name, double price, int quantity, List<String> imagePaths) async {
 
     List<String> imageUrls = [];
-    for (final imagePath in imagePaths) {
-      try {
-        File file = File(imagePath);
-        final imageUrl = await uploadImage(file);
 
-        if (imageUrl != null) {
-          imageUrls.add(imageUrl);
-        } else {
-          debugPrint('Erro ao processar a imagem: $imagePath');
-        }
-      } catch (e) {
-        debugPrint('Erro ao processar a imagem $imagePath: $e');
-      }
-    }
+    // for (final imagePath in imagePaths) {
+    //   try {
+    //     File file = File(imagePath);
+    //     final imageUrl = await uploadImage(file);
 
-    if (imageUrls.isEmpty) {
-      throw Exception('Nenhuma imagem foi carregada com sucesso.');
-    }
+    //     if (imageUrl != null) {
+    //       imageUrls.add(imageUrl);
+    //     } else {
+    //       debugPrint('Erro ao processar a imagem: $imagePath');
+    //     }
+    //   } catch (e) {
+    //     debugPrint('Erro ao processar a imagem $imagePath: $e');
+    //   }
+    // }
+
+    // if (imageUrls.isEmpty) {
+    //   throw Exception('Nenhuma imagem foi carregada com sucesso.');
+    // }
 
     final newProduct = ProductModel(
       id: FirebaseFirestore.instance.collection('products').doc().id,

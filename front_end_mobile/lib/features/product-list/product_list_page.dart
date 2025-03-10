@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:front_end_mobile/features/product-details/product_datils_page.dart';
-import 'package:front_end_mobile/features/product-list/services/product_list_services.dart';
+import 'package:front_end_mobile/features/product-list/cubit/product_list_cubit.dart';
 import 'package:front_end_mobile/features/register-product/register_product_page.dart';
+import 'package:front_end_mobile/shared/models/product_model.dart';
 import '../../shared/colors.dart';
 import '../../shared/widgets/app_bar.dart';
 import '../../shared/widgets/stylish_float_action_button.dart';
@@ -14,28 +16,11 @@ class ProductListPage extends StatefulWidget {
 }
 
 class _ProductListPageState extends State<ProductListPage> {
-  late List<Map<String, dynamic>> products = [];
-  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadProducts();
-  }
-
-  Future<void> _loadProducts() async {
-    try {
-      final fetchedProducts = await ProductListServices().fetchProducts();
-      setState(() {
-        products = fetchedProducts;
-        isLoading = false;
-      });
-    } catch (e) {
-      debugPrint('Erro ao carregar produtos: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
+    context.read<ProductListCubit>().getListOfProducts();
   }
 
   @override
@@ -48,9 +33,19 @@ class _ProductListPageState extends State<ProductListPage> {
           children: <Widget>[
             const AppBarWidget(title: 'Produtos'),
             Expanded(
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator()) // Carregando
-                  : _buildProductListInfo(), // Lista de produtos
+              child: BlocBuilder<ProductListCubit, ProductListState>(
+                builder: (context, state) {
+                  if (state is InitialProductListState || state is LoadingProductListState) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is SuccessProductListState) {
+                    return _buildProductListInfo(state.products);
+                  } else if (state is ErrorProductListState) {
+                    return Center(child: Text(state.message));
+                  } else {
+                    return SizedBox();
+                  }
+                },
+              )
             ),
           ],
         ),
@@ -74,7 +69,7 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 
-  Widget _buildProductListInfo() {
+  Widget _buildProductListInfo(List<ProductModel> products) {
     if (products.isEmpty) {
       return const Center(
         child: Text(
@@ -93,7 +88,7 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 
-  Widget _buildProductCard(Map<String, dynamic> product) {
+  Widget _buildProductCard(ProductModel product) {
     return Card(
       elevation: 4,
       shadowColor: Colors.black.withValues(alpha: 0.15),
@@ -127,12 +122,11 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 
-  // Cria o widget da imagem do produto
-  Widget _buildProductImage(Map<String, dynamic> product) {
+  Widget _buildProductImage(ProductModel product) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: Image.network(
-        product['imageUrl'].isNotEmpty ? product['imageUrl'][0] : '',
+        product.imageUrl.isNotEmpty ? product.imageUrl[0] : '',
         width: 100,
         height: 100,
         fit: BoxFit.cover,
@@ -149,14 +143,13 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 
-  // Cria os detalhes do produto (nome, quantidade e preço)
-  Widget _buildProductDetails(Map<String, dynamic> product) {
+  Widget _buildProductDetails(ProductModel product) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            product['name'],
+            product.name,
             style: const TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 22,
@@ -165,7 +158,7 @@ class _ProductListPageState extends State<ProductListPage> {
           ),
           const SizedBox(height: 5),
           Text(
-            'Quantidade: ${product['quantity']}',
+            'Quantidade: ${product.quantity}',
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16,
@@ -180,18 +173,17 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 
-  // Cria o widget de preço do produto
-  Widget _buildProductPrice(Map<String, dynamic> product) {
+  Widget _buildProductPrice(ProductModel product) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.lightGreen,
+        color: AppColors.greenLight,
         borderRadius: BorderRadius.circular(5),
       ),
       padding: const EdgeInsets.all(5),
       child: Center(
         child: Text(
-          'Preço: R\$${product['price']}',
+          'Preço: R\$${product.price}',
           style: const TextStyle(
             color: AppColors.green,
             fontWeight: FontWeight.bold,
@@ -202,17 +194,16 @@ class _ProductListPageState extends State<ProductListPage> {
     );
   }
 
-  // Navega para a página de detalhes do produto
-  Future navigateToItemDetail(BuildContext context, Map<String, dynamic> product) {
+  Future navigateToItemDetail(BuildContext context, ProductModel product) {
     return Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
           return ProductDetailsPage(
-            productName: product['name'],
-            price: product['price'],
-            quantity: product['quantity'],
-            imageUrls: List<String>.from(product['imageUrl']),
+            productName: product.name,
+            price: product.price,
+            quantity: product.quantity,
+            imageUrls: List<String>.from(product.imageUrl),
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {

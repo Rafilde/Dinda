@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:front_end_mobile/features/product-list/cubit/product_list_cubit.dart';
 import 'package:front_end_mobile/shared/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,7 +19,8 @@ class RegisterProductPage extends StatefulWidget {
 
 class _RegisterProductPageState extends State<RegisterProductPage> {
   late final TextEditingController _nameController = TextEditingController();
-  late final TextEditingController _quantityController = TextEditingController();
+  late final TextEditingController _quantityController =
+      TextEditingController();
   final MoneyMaskedTextController _priceController = MoneyMaskedTextController(
     leftSymbol: 'R\$',
     decimalSeparator: ',',
@@ -41,62 +43,65 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     setState(() {
       images.clear();
       images.addAll(pickedFiles.map((file) => file.path));
+      debugPrint(images.toString());
     });
-    }
-
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => RegisterProductCubit(),
-      child: BlocListener<RegisterProductCubit, RegisterProductState>(
-        listener: (context, state) {
-          if (state is ErrorRegisterProductState) {
-            _errorSnackBar(context, state.message);
-          }
-          if (state is SuccessRegisterProductState) {
-            _successMessage(context, 'Produto cadastrado com sucesso!');
-            Navigator.of(context).pop();
-          }
-          if (state is LoadingRegisterProductState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Row(
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        'Cadastrando produto...',
-                        style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
-                      ),
+    return BlocListener<RegisterProductCubit, RegisterProductState>(
+      listener: (context, state) {
+        if (state is ErrorRegisterProductState) {
+          _errorSnackBar(context, state.message);
+        }
+        if (state is SuccessRegisterProductState) {
+          _successMessage(context, 'Produto cadastrado com sucesso!');
+          setState(() {
+            _nameController.clear();
+            _quantityController.clear();
+            _priceController.updateValue(0.0);
+            images.clear();
+          });
+        }
+        if (state is LoadingRegisterProductState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Row(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Cadastrando produto...',
+                      style: TextStyle(
+                          color: AppColors.white, fontWeight: FontWeight.bold),
                     ),
-                  ],
-                ),
-                backgroundColor: AppColors.primaryColor,
-                behavior: SnackBarBehavior.floating,
-                margin: const EdgeInsets.all(16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            );
-          }
-        },
-        child: SafeArea(
-          child: Scaffold(
-            body: Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(color: AppColors.primaryColor),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _buildCloseButton(context),
-                  _buildTitleSection(),
-                  const SizedBox(height: 20),
-                  Expanded(child: _buildFormSection()),
+                  ),
                 ],
               ),
+              backgroundColor: AppColors.primaryColor,
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.all(16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          );
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(color: AppColors.primaryColor),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildCloseButton(context),
+                _buildTitleSection(),
+                const SizedBox(height: 20),
+                Expanded(child: _buildFormSection()),
+              ],
             ),
           ),
         ),
@@ -104,10 +109,11 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     );
   }
 
-
   Widget _buildCloseButton(BuildContext context) {
     return IconButton(
-      onPressed: () => Navigator.pop(context),
+      onPressed: () {
+        Navigator.pop(context);
+        context.read<ProductListCubit>().getListOfProducts();},
       padding: const EdgeInsets.all(20),
       icon: const Icon(Icons.close),
       color: AppColors.white,
@@ -125,7 +131,10 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
       return;
     }
 
-    debugPrint('Name: ${_nameController.text.trim()}' 'Price: ${_priceController.numberValue}' 'Quantity: ${int.tryParse(_quantityController.text)!}' 'Image: $images');
+    debugPrint('Name: ${_nameController.text.trim()}'
+        'Price: ${_priceController.numberValue}'
+        'Quantity: ${int.tryParse(_quantityController.text)!}'
+        'Image: $images');
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -163,7 +172,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             onPressed: () async {
               Navigator.of(context).pop();
               try {
-                 BlocProvider.of<RegisterProductCubit>(context).createProduct(
+                BlocProvider.of<RegisterProductCubit>(context).createProduct(
                   name,
                   price,
                   quantity,
@@ -255,7 +264,10 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             controller: _quantityController,
             hintText: "Informe a quantidade de produtos",
             keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(4),],
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(4),
+            ],
           ),
           _buildTextField(
             controller: _priceController,
@@ -445,7 +457,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             Expanded(
               child: Text(
                 'Por favor, preencha todos os campos corretamente.',
-                style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: AppColors.white, fontWeight: FontWeight.bold),
               ),
             ),
           ],

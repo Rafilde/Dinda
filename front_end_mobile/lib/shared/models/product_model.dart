@@ -5,7 +5,7 @@ class ProductModel {
   final String name;
   final double price;
   final int quantity;
-  final List<String> imageUrl;
+  final List<dynamic> imageUrl;
   final Timestamp createdAt;
 
   ProductModel({
@@ -17,7 +17,7 @@ class ProductModel {
     required this.createdAt
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,

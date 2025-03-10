@@ -8,17 +8,17 @@ class RegisterProductCubit extends Cubit<RegisterProductState> {
   RegisterProductCubit() : super(const InitialRegisterProductState());
 
   Future<void> createProduct(String name, double price, int quantity, List<String> imageUrl) async {
-    if (state is InitialRegisterProductState) emit(const LoadingRegisterProductState());
+    emit(const LoadingRegisterProductState());
+    
     try {
       debugPrint('Attempting to create product...');
       await Locator.instance.get<RegisterProductServices>().createProduct(name, price, quantity, imageUrl);
       debugPrint('Product created successfully!');
-      emit(const SuccessRegisterProductState());
-      debugPrint(state.toString());
+      
+      emit(const SuccessRegisterProductState()); 
     } catch (e) {
       debugPrint('Error while saving product: $e');
-      emit(ErrorRegisterProductState(
-          'Erro ao criar o produto: ${e.toString()}'));
+      emit(ErrorRegisterProductState('Erro ao criar o produto: ${e.toString()}'));
     }
   }
 
